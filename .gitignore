@@ -1,0 +1,4 @@
+/bin/
+*.out
+js/node_modules/
+js/coverage/
