@@ -1,6 +1,6 @@
 {
   "name": "@eliasmeireles/sso-kit",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "OIDC Authorization Code + PKCE helpers for Node backends-for-frontend and browser public clients",
   "type": "module",
   "license": "UNLICENSED",

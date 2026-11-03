@@ -8,7 +8,7 @@ service workers for public clients. The only runtime dependency is
 ## Install
 
 ```sh
-npm install https://github.com/eliasmeireles/sso-kit/releases/download/js-v0.1.0/eliasmeireles-sso-kit-0.1.0.tgz
+npm install https://github.com/eliasmeireles/sso-kit/releases/download/js-v0.2.0/eliasmeireles-sso-kit-0.2.0.tgz
 ```
 
 The release tarball must contain the compiled `dist/` directory. Build with
@@ -21,8 +21,8 @@ from implementing this package.
 | --- | --- |
 | `@eliasmeireles/sso-kit/server` | `createSsoServer`, `SsoError`, `pendingCookie`, `clearPendingCookie`, `readCookie`, `loginErrorRedirect` |
 | Server types | `SsoConfig`, `SsoServer`, `Policy`, `Identity`, `SsoErrorCode`, `PendingCookieOptions` |
-| `@eliasmeireles/sso-kit/browser` | `createBrowserLogin`, `SsoError` |
-| Browser types | `BrowserLoginConfig`, `BrowserLogin`, `BrowserPending`, `BrowserCallback`, `SsoErrorCode` |
+| `@eliasmeireles/sso-kit/browser` | `createBrowserLogin`, `claimAutoLogin`, `SsoError` |
+| Browser types | `BrowserLoginConfig`, `BrowserLogin`, `BrowserPending`, `BrowserCallback`, `AutoLoginOptions`, `AutoLoginStorage`, `SsoErrorCode` |
 
 `SsoConfig` contains `issuer`, `clientId`, `clientSecret`, `redirectUri`, optional
 `scopes`, and optional `policy: { requiredRole?, allowedSubjects? }`.
@@ -242,6 +242,36 @@ export async function signIn() {
   }
 }
 ```
+
+## Login page without a button
+
+A login page can send the browser straight to the provider instead of showing
+a "Sign in" button. Two rules keep this from looping:
+
+- Never redirect when the page shows a login error (`?error=forbidden`, a
+  denied consent and so on); show the message and a manual button.
+- Redirect at most once per short window. If the browser comes back without a
+  session a few seconds later (a refused cookie, for example), show the button.
+
+`claimAutoLogin` implements the second rule with a timestamp in
+`sessionStorage`. It works in any page, including those that start the flow on
+a backend route:
+
+```ts
+import { claimAutoLogin } from '@eliasmeireles/sso-kit/browser';
+
+// In a client component or script, after checking there is no session.
+if (!new URLSearchParams(location.search).has('error') &&
+    claimAutoLogin({ key: 'example-app.auto-login' })) {
+  location.replace('/auth/login');
+} else {
+  showLoginButton();
+}
+```
+
+It returns `false` when storage is unavailable, so the page falls back to the
+button. The default window is 30 seconds; a person typing a password and an
+authenticator code takes longer than a redirect that bounces straight back.
 
 ## Security notes
 

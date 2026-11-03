@@ -40,3 +40,5 @@ export function createBrowserLogin(config: BrowserLoginConfig): BrowserLogin {
     },
   };
 }
+
+export { claimAutoLogin, type AutoLoginOptions, type AutoLoginStorage } from './auto-login.js';
