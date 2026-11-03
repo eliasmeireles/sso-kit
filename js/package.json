@@ -10,6 +10,7 @@
   "files": [
     "dist",
     "!dist/**/*.test.*",
+    "!dist/test-support/**",
     "README.md"
   ],
   "exports": {

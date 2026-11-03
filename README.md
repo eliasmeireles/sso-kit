@@ -7,6 +7,7 @@ flow with PKCE (S256)**, without rewriting the same login code in every app.
 | Package | Use it when |
 |---|---|
 | [`sso`](./sso) (Go) | You need the OIDC client: start the login, complete the callback, verify ID tokens and apply an access policy (realm role and/or allowed subjects). |
+| [`@eliasmeireles/sso-kit`](./js) (TypeScript) | Your Next.js BFF completes confidential login, or your browser/extension starts a public PKCE flow for a Go backend to complete. |
 | [`ssohttp`](./ssohttp) (Go) | Your Go server owns the login: ready `net/http` handlers for login, callback and logout; you only plug your session. |
 
 ## Security model
